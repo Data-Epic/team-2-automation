@@ -4,6 +4,9 @@ from oauth2client.service_account import ServiceAccountCredentials  # For Google
 import cohere  # For AI processing with Cohere
 import matplotlib.pyplot as plt  # For creating the pie chart
 import time
+from dotenv import load_dotenv
+import os
+load_dotenv()
 
 # Step 1: Authenticating with Google Sheets using service account
 scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
@@ -19,7 +22,7 @@ reviews = sheet.col_values(2)[1:]
 unique_reviews = list(set(reviews))  # Remove duplicates
 
 # Step 4: Initializing Cohere API
-co = cohere.Client("20rc2Yw4NcBmVJSAxjzOsuqiXx0KKIQt3yPJRhR5")  # Your Cohere API key
+co = cohere.Client(os.getenv("COHERE_API_KEY"))  # Your Cohere API key
 
 # Step 5: Preparing the lists to collect results
 sentiments = []
@@ -41,7 +44,6 @@ for i, review in enumerate(reviews):
     Sentiment: <Positive/Negative/Neutral>
     Summary: <One sentence summary>
     """
-
     try:
         # Using chat endpoint
         response = co.chat(
@@ -68,11 +70,10 @@ for i, review in enumerate(reviews):
         action_needed = "Yes" if sentiment.lower() == "negative" else "No"
 
         # Write AI results to Google Sheet
-       # Updating Google Sheet 
+       # Updating Google Sheet
         sheet.update_cell(i + 2, 4, sentiment)       # Column D = AI Sentiment
         sheet.update_cell(i + 2, 5, summary)         # Column E = AI Summary
         sheet.update_cell(i + 2, 6, action_needed)   # Column F = Action Needed?
-
 
         # Store results
         sentiments.append(sentiment)
@@ -85,4 +86,3 @@ for i, review in enumerate(reviews):
 
     except Exception as e:
         print(f"⚠️ Error processing row {i + 2}: {e}")
-
