@@ -57,7 +57,13 @@ for i, review in enumerate(reviews):
         sentiment_line = [line for line in result.splitlines() if "Sentiment:" in line][0]
         summary_line = [line for line in result.splitlines() if "Summary:" in line][0]
 
-        sentiment = sentiment_line.replace("Sentiment:", "").strip()
+        #sentiment = sentiment_line.replace("Sentiment:", "").strip()
+        sentiment = sentiment_line.replace("Sentiment:", "").strip().capitalize()
+
+       # Fixing for unexpected sentiments like "Mixed"
+        if sentiment == "Mixed":
+          sentiment = "Neutral"
+
         summary = summary_line.replace("Summary:", "").strip()
 
         # Using the original text as summary if it is too short to summarize
@@ -86,3 +92,25 @@ for i, review in enumerate(reviews):
     except Exception as e:
         print(f"⚠️ Error processing row {i + 2}: {e}")
 
+
+# Step 7: Visualizing the Sentiment Distribution with a Pie Chart
+
+# Counting the number of each sentiment type
+positive_count = sentiments.count("Positive")
+negative_count = sentiments.count("Negative")
+neutral_count = sentiments.count("Neutral")
+
+# Defining labels and values for the pie chart
+labels = ["Positive", "Negative", "Neutral"]
+values = [positive_count, negative_count, neutral_count]
+colors = ["green", "red", "yellow"]   #Green for Positive, Red for Negative, Yellow for neutral
+
+# Creating the pie chart
+plt.figure(figsize=(8, 6))
+plt.pie(values, labels=labels, colors=colors, autopct="%1.1f%%", startangle=140)
+plt.title("Sentiment Distribution of Redmi6 Reviews")
+plt.axis("equal")  # Ensures the pie is a circle
+plt.tight_layout()
+
+# Display the chart
+plt.show()
