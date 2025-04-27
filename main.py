@@ -6,9 +6,9 @@ import matplotlib.pyplot as plt  # For creating the pie chart
 import time
 
 # Step 1: Authenticating with Google Sheets using service account
-scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
+scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"] #reading and writing data, access to drive
 creds = ServiceAccountCredentials.from_json_keyfile_name('service_account.json', scope)
-client = gspread.authorize(creds)
+client = gspread.authorize(creds) #authorizing gspread
 
 # Step 2: Opening the Google Sheet and the specific worksheet
 spreadsheet = client.open("Redmi Reviews - Team 2")
@@ -19,7 +19,7 @@ reviews = sheet.col_values(2)[1:]
 unique_reviews = list(set(reviews))  # Remove duplicates
 
 # Step 4: Initializing Cohere API
-co = cohere.Client("20rc2Yw4NcBmVJSAxjzOsuqiXx0KKIQt3yPJRhR5")  # Your Cohere API key
+co = cohere.Client("20rc2Yw4NcBmVJSAxjzOsuqiXx0KKIQt3yPJRhR5")  # Cohere API key
 
 # Step 5: Preparing the lists to collect results
 sentiments = []
@@ -80,7 +80,7 @@ for i, review in enumerate(reviews):
         sheet.update_cell(i + 2, 6, action_needed)   # Column F = Action Needed?
 
 
-        # Store results
+        # Storing results
         sentiments.append(sentiment)
         summaries.append(summary)
         actions.append(action_needed)
