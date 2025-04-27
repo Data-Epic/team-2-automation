@@ -29,7 +29,7 @@ This project automates the sentiment analysis and summarization of Redmi 6 custo
 
   - Matplotlib
 
-  -Google Sheets API
+  - Google Sheets API
 
   - OAuth2Client
     
